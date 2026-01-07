@@ -7,8 +7,18 @@ const app = new Hono()
 app.use(renderer)
 app.use('/static/*', serveStatic({ root: './public' }))
 
-// 5 Logo Styles - Premium Memorial Pet Art (LOVING EYES - honoring their memory)
+// 6 Logo Styles - Premium Memorial Pet Art (LOVING EYES - honoring their memory)
 const logoStyles = [
+    { 
+        id: 'signature', 
+        name: 'Signature', 
+        subtitle: 'Estilo Oficial',
+        desc: 'El logo clásico de Blackie Studio',
+        icon: 'fa-star',
+        color: '#E3B505',
+        image: '/static/blackie_logo.png',
+        rating: 10
+    },
     { 
         id: 'watercolor', 
         name: 'Watercolor', 
@@ -61,44 +71,87 @@ const logoStyles = [
     }
 ]
 
-// Product Categories with variants
+// Product Categories with variants - PREMIUM COLLECTION
 const productCategories = [
+    {
+        id: 'hoodies',
+        name: 'Hoodies',
+        icon: 'fa-shirt',
+        mockupImage: '/static/mockup_grid1.jpg',
+        products: [
+            { id: 'hoodie-black', name: 'Negra', color: '#1A1A1A', price: 59.90 },
+            { id: 'hoodie-gray', name: 'Gris', color: '#9CA3AF', price: 59.90 },
+        ]
+    },
     {
         id: 'tshirts',
         name: 'Camisetas',
-        icon: 'fa-shirt',
+        icon: 'fa-vest',
+        mockupImage: '/static/mockup_grid1.jpg',
         products: [
-            { id: 'tee-black', name: 'Negra', color: '#1A1A1A', price: 34.90 },
             { id: 'tee-white', name: 'Blanca', color: '#FFFFFF', price: 34.90 },
-            { id: 'tee-gray', name: 'Gris', color: '#6B7280', price: 34.90 },
+            { id: 'tee-black', name: 'Negra', color: '#1A1A1A', price: 34.90 },
         ]
     },
     {
-        id: 'mugs',
-        name: 'Tazas',
-        icon: 'fa-mug-hot',
+        id: 'sweatshirts',
+        name: 'Sweatshirts',
+        icon: 'fa-shirt',
+        mockupImage: '/static/mockup_grid2.jpg',
         products: [
-            { id: 'mug-white', name: 'Clásica', color: '#FFFFFF', price: 18.50 },
-            { id: 'mug-black', name: 'Negra', color: '#1A1A1A', price: 21.90 },
+            { id: 'sweat-gray', name: 'Gris', color: '#D1D5DB', price: 49.90 },
+            { id: 'sweat-black', name: 'Negra', color: '#1A1A1A', price: 49.90 },
         ]
     },
     {
-        id: 'frames',
-        name: 'Cuadros',
-        icon: 'fa-image',
+        id: 'jackets',
+        name: 'Jackets',
+        icon: 'fa-vest',
+        mockupImage: '/static/mockup_premium.jpg',
         products: [
-            { id: 'frame-small', name: '20x20cm', size: 'small', price: 35.00 },
-            { id: 'frame-medium', name: '30x30cm', size: 'medium', price: 45.00 },
-            { id: 'frame-large', name: '50x50cm', size: 'large', price: 65.00 },
+            { id: 'denim-jacket', name: 'Denim', color: '#3B82F6', price: 89.90 },
+            { id: 'bomber-jacket', name: 'Bomber', color: '#1A1A1A', price: 99.90 },
+            { id: 'leather-jacket', name: 'Leather', color: '#1A1A1A', price: 149.90 },
+        ]
+    },
+    {
+        id: 'caps',
+        name: 'Gorras',
+        icon: 'fa-hat-cowboy',
+        mockupImage: '/static/mockup_grid2.jpg',
+        products: [
+            { id: 'cap-black', name: 'Negra', color: '#1A1A1A', price: 29.90 },
         ]
     },
     {
         id: 'bags',
         name: 'Tote Bags',
         icon: 'fa-bag-shopping',
+        mockupImage: '/static/mockup_grid2.jpg',
         products: [
-            { id: 'tote-natural', name: 'Natural', color: '#EBE8DE', price: 29.90 },
+            { id: 'tote-navy', name: 'Navy', color: '#1E3A5F', price: 29.90 },
             { id: 'tote-black', name: 'Negra', color: '#1A1A1A', price: 29.90 },
+        ]
+    },
+    {
+        id: 'patches',
+        name: 'Parches',
+        icon: 'fa-certificate',
+        mockupImage: '/static/mockup_patches.jpg',
+        products: [
+            { id: 'patch-circle', name: 'Círculo', color: '#1A1A1A', price: 12.90 },
+            { id: 'patch-square', name: 'Cuadrado', color: '#1A1A1A', price: 12.90 },
+            { id: 'patch-hex', name: 'Hexágono', color: '#1A1A1A', price: 14.90 },
+        ]
+    },
+    {
+        id: 'shirts',
+        name: 'Camisas',
+        icon: 'fa-shirt',
+        mockupImage: '/static/mockup_premium.jpg',
+        products: [
+            { id: 'shirt-blue', name: 'Azul', color: '#93C5FD', price: 54.90 },
+            { id: 'shirt-white', name: 'Blanca', color: '#FFFFFF', price: 54.90 },
         ]
     }
 ]
@@ -140,7 +193,7 @@ app.get('/', (c) => {
                 <span class="text-[#4A7C59]">con arte premium.</span>
               </h1>
               <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                Transformamos la foto de tu mascota en <strong>5 logos premium</strong> para recordarla con amor. Arte memorial en productos de alta calidad.
+                Transformamos la foto de tu mascota en <strong>6 logos premium</strong> para recordarla con amor. Arte memorial en productos de alta calidad.
               </p>
               
               <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
@@ -179,15 +232,15 @@ app.get('/', (c) => {
         </div>
       </header>
 
-      {/* 5 Styles Preview */}
+      {/* 6 Styles Preview */}
       <section class="py-12 sm:py-16 bg-white px-4 sm:px-6">
         <div class="max-w-7xl mx-auto">
           <div class="text-center mb-8">
-            <h2 class="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-2">5 Estilos Únicos</h2>
-            <p class="text-gray-500">Cada foto genera 5 estilos únicos para honrar su memoria</p>
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-2">6 Estilos Únicos</h2>
+            <p class="text-gray-500">Cada foto genera 6 estilos únicos para honrar su memoria</p>
           </div>
           
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             {logoStyles.map((style, i) => (
               <div key={style.id} class={`bg-[#FFFDF5] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 ${i === 0 ? 'ring-2 ring-[#E3B505]' : ''}`}>
                 <div class="relative">
@@ -211,29 +264,47 @@ app.get('/', (c) => {
         </div>
       </section>
 
-      {/* Product Categories */}
+      {/* Product Mockups Gallery */}
       <section class="py-12 sm:py-16 bg-[#FFFDF5] px-4 sm:px-6">
         <div class="max-w-7xl mx-auto">
           <div class="text-center mb-8">
-            <h2 class="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-2">Productos Premium</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-2">Colección Premium</h2>
             <p class="text-gray-500">Tu logo en productos de alta calidad</p>
           </div>
           
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          {/* Main Mockup Images */}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition">
+              <img src="/static/mockup_grid1.jpg" alt="Blackie Collection" class="w-full" />
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition">
+              <img src="/static/mockup_grid2.jpg" alt="Blackie Products" class="w-full" />
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition">
+              <img src="/static/mockup_patches.jpg" alt="Blackie Patches" class="w-full" />
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition">
+              <img src="/static/mockup_premium.jpg" alt="Blackie Premium" class="w-full" />
+            </div>
+          </div>
+          
+          {/* Product Categories Grid */}
+          <div class="grid grid-cols-4 md:grid-cols-8 gap-3 mb-8">
             {productCategories.map((cat) => (
-              <div key={cat.id} class="bg-white rounded-2xl p-4 sm:p-6 text-center shadow-lg hover:shadow-xl transition">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-[#1A1A1A] rounded-2xl flex items-center justify-center mb-4">
-                  <i class={`fa-solid ${cat.icon} text-2xl sm:text-3xl text-white`}></i>
-                </div>
-                <h3 class="font-bold text-base sm:text-lg text-[#1A1A1A]">{cat.name}</h3>
-                <p class="text-xs text-gray-400 mt-1">Desde ${Math.min(...cat.products.map(p => p.price)).toFixed(2)}</p>
+              <div key={cat.id} class="bg-white rounded-xl p-3 text-center shadow-md hover:shadow-lg transition cursor-pointer hover:ring-2 hover:ring-[#E3B505]">
+                <i class={`fa-solid ${cat.icon} text-xl text-[#1A1A1A] mb-1`}></i>
+                <p class="text-[10px] font-bold text-gray-600">{cat.name}</p>
+                <p class="text-[8px] text-[#4A7C59] font-bold">${Math.min(...cat.products.map(p => p.price)).toFixed(0)}+</p>
               </div>
             ))}
           </div>
           
-          <div class="text-center mt-8">
-            <a href="/crear" class="inline-flex items-center gap-2 bg-[#4A7C59] text-white px-6 sm:px-8 py-3 rounded-full font-bold shadow-xl hover:bg-[#1A1A1A] transition">
-              <i class="fa-solid fa-arrow-right"></i> Empezar Ahora
+          <div class="text-center">
+            <a href="/crear" class="inline-flex items-center gap-2 bg-[#1A1A1A] text-white px-8 py-4 rounded-full font-bold shadow-xl hover:bg-[#E3B505] hover:text-[#1A1A1A] transition text-lg">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Crear Mi Logo Ahora
             </a>
           </div>
         </div>
@@ -489,7 +560,7 @@ app.get('/crear', (c) => {
                                 <h4 class="font-bold text-sm mb-3 flex items-center gap-2">
                                     <i class="fa-solid fa-gift text-[#E3B505]"></i> Recibirás:
                                 </h4>
-                                <div class="grid grid-cols-5 gap-1">
+                                <div class="grid grid-cols-6 gap-1">
                                     {logoStyles.map((s) => (
                                         <div key={s.id} class="text-center">
                                             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mx-auto mb-1">
@@ -505,7 +576,7 @@ app.get('/crear', (c) => {
                                     x-bind:disabled="!imageLoaded || !petName.trim()"
                                     class="w-full bg-[#E3B505] text-[#1A1A1A] py-3 rounded-full font-bold shadow-xl hover:bg-[#1A1A1A] hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                Generar 5 Logos
+                                Generar 6 Logos
                             </button>
                         </div>
                     </div>
@@ -548,11 +619,11 @@ app.get('/crear', (c) => {
                     {/* PHASE 3A: Select Logo */}
                     <div x-show="!selectedLogo">
                         <div class="text-center mb-6">
-                            <h1 class="text-2xl font-bold mb-1">¡Tus 5 Logos!</h1>
+                            <h1 class="text-2xl font-bold mb-1">¡Tus 6 Logos!</h1>
                             <p class="text-gray-500 text-sm">Elige tu favorito para <span class="font-bold" x-text="petName"></span></p>
                         </div>
                         
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                             <template x-for="logo in generatedLogos">
                                 <div class="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all hover:shadow-xl hover:scale-[1.02]"
                                      x-on:click="selectLogo(logo.id)">
@@ -608,7 +679,7 @@ app.get('/crear', (c) => {
                                 </div>
                                 
                                 {/* Category Selection */}
-                                <div class="grid grid-cols-4 gap-2">
+                                <div class="grid grid-cols-4 sm:grid-cols-8 gap-2">
                                     <template x-for="cat in categories">
                                         <button x-on:click="selectCategory(cat.id)"
                                                 class="bg-white rounded-xl p-3 text-center shadow-md hover:shadow-lg transition"
