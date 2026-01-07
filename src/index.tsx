@@ -113,7 +113,7 @@ app.get('/', (c) => {
       <nav class="sticky top-0 z-50 bg-[#FFFDF5]/95 backdrop-blur border-b border-[#E3B505]/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
           <div class="flex items-center gap-2">
-            <span class="text-xl sm:text-2xl font-bold tracking-tight text-[#1A1A1A]">BLACKIE</span>
+            <img src="/static/blackie_logo.png" alt="Blackie" class="h-10 w-auto" />
             <span class="text-xs bg-[#E3B505] text-white px-2 py-0.5 rounded-full font-bold">STUDIO</span>
           </div>
           <a href="/crear" class="bg-[#1A1A1A] text-white px-4 sm:px-6 py-2 rounded-full font-bold shadow-lg hover:bg-[#4A7C59] transition text-xs sm:text-sm flex items-center gap-2">
@@ -242,7 +242,7 @@ app.get('/', (c) => {
       {/* Footer */}
       <footer class="bg-[#1A1A1A] text-white py-8 mt-auto px-4">
         <div class="max-w-7xl mx-auto text-center">
-          <p class="text-xl font-bold mb-2">BLACKIE STUDIO</p>
+          <img src="/static/blackie_logo.png" alt="Blackie Studio" class="h-12 mx-auto mb-2" />
           <p class="text-gray-400 text-xs">Arte memorial premium • Honrando su memoria con amor 🤍</p>
         </div>
       </footer>
@@ -397,7 +397,7 @@ app.get('/crear', (c) => {
                     <a href="/" class="flex items-center gap-1 text-[#1A1A1A] hover:text-[#4A7C59] transition font-bold text-sm">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
-                    <span class="font-bold">BLACKIE STUDIO</span>
+                    <img src="/static/blackie_logo.png" alt="Blackie" class="h-8" />
                     <div class="relative">
                         <button class="bg-[#1A1A1A] text-white w-9 h-9 rounded-full text-sm hover:bg-[#E3B505] transition">
                             <i class="fa-solid fa-bag-shopping"></i>
