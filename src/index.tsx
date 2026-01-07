@@ -1,11 +1,181 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
+import { cors } from 'hono/cors'
 import { renderer } from './renderer'
 
-const app = new Hono()
+type Bindings = {
+  GEMINI_API_KEY?: string
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
 
 app.use(renderer)
 app.use('/static/*', serveStatic({ root: './public' }))
+app.use('/api/*', cors())
+
+// ===========================================
+// LOGO GENERATION STYLES - 6 unique artistic styles
+// ===========================================
+const logoGenerationStyles = [
+    {
+        id: 'watercolor',
+        name: 'Watercolor',
+        prompt: 'Elegant watercolor portrait style, soft brushstrokes, dreamy artistic look, gentle color washes, peaceful expression with closed eyes resting peacefully, memorial tribute art, white background, delicate premium illustration'
+    },
+    {
+        id: 'kawaii',
+        name: 'Kawaii Pop',
+        prompt: 'Cute kawaii portrait logo, big sparkling loving eyes with heart shine, adorable expression, bold thick outlines, designer toy aesthetic, simple geometric shapes, fluffy cheeks, white background'
+    },
+    {
+        id: 'bold',
+        name: 'Bold Modern',
+        prompt: 'Bold modern vector face logo, thick outlines, designer toy style, sweet loving eyes with small hearts, gentle happy expression, simple shapes, white background, streetwear graphic design, merchandise ready'
+    },
+    {
+        id: 'stencil',
+        name: 'Stencil Art',
+        prompt: 'High contrast stencil art silhouette portrait, street art style, peaceful sleeping expression with closed eyes, minimalist black and white, spray paint aesthetic, memorial tribute, clean white background'
+    },
+    {
+        id: 'monoline',
+        name: 'Mono-Line',
+        prompt: 'Elegant monoline portrait, single continuous line drawing, minimalist modern logo, soft gentle closed eyes peaceful expression, sophisticated simple design, black ink on white background, premium memorial pet art'
+    },
+    {
+        id: 'signature',
+        name: 'Signature',
+        prompt: 'Classic elegant portrait logo, professional illustration style, expressive loving eyes, refined lines, timeless memorial art, premium quality, sophisticated design, white background'
+    }
+]
+
+// ===========================================
+// API: Generate Logos with Gemini AI
+// ===========================================
+app.post('/api/generate-logos', async (c) => {
+    try {
+        const body = await c.req.json()
+        const { imageBase64, petName, petType } = body
+        
+        if (!imageBase64 || !petName) {
+            return c.json({ error: 'Missing required fields: imageBase64 and petName' }, 400)
+        }
+        
+        // Get API key from environment or use provided one
+        const apiKey = c.env?.GEMINI_API_KEY || 'AIzaSyDh88koXIrLB_VQawXcGi4Jlv2evhYXf4s'
+        
+        // Clean base64 - remove data:image prefix if present
+        const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '')
+        
+        // Generate all 6 logo styles
+        const generatedLogos = []
+        
+        for (const style of logoGenerationStyles) {
+            const fullPrompt = `Create a memorial pet logo for a ${petType || 'pet'} named "${petName}". 
+IMPORTANT: Keep the EXACT same pose, position, and angle as the reference photo. 
+IMPORTANT: The pet has passed away - create respectful, loving memorial art. NO X eyes, NO crossed out eyes.
+Style: ${style.prompt}
+The logo should maintain the unique features and expression of the pet from the reference photo.`
+            
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [
+                                    {
+                                        inline_data: {
+                                            mime_type: 'image/jpeg',
+                                            data: cleanBase64
+                                        }
+                                    },
+                                    {
+                                        text: fullPrompt
+                                    }
+                                ]
+                            }]
+                        })
+                    }
+                )
+                
+                if (response.ok) {
+                    const result = await response.json()
+                    
+                    // Extract image from response
+                    let imageData = null
+                    if (result.candidates && result.candidates[0]?.content?.parts) {
+                        for (const part of result.candidates[0].content.parts) {
+                            if (part.inlineData?.data) {
+                                imageData = `data:image/png;base64,${part.inlineData.data}`
+                                break
+                            }
+                        }
+                    }
+                    
+                    if (imageData) {
+                        generatedLogos.push({
+                            id: style.id,
+                            name: style.name,
+                            image: imageData,
+                            generated: true
+                        })
+                    } else {
+                        // Fallback to static image if no image generated
+                        generatedLogos.push({
+                            id: style.id,
+                            name: style.name,
+                            image: `/static/blackie_${style.id}.jpg`,
+                            generated: false,
+                            error: 'No image in response'
+                        })
+                    }
+                } else {
+                    const errorText = await response.text()
+                    console.error(`Gemini API error for ${style.id}:`, errorText)
+                    
+                    // Fallback to static image
+                    generatedLogos.push({
+                        id: style.id,
+                        name: style.name,
+                        image: `/static/blackie_${style.id}.jpg`,
+                        generated: false,
+                        error: errorText
+                    })
+                }
+            } catch (styleError) {
+                console.error(`Error generating ${style.id}:`, styleError)
+                
+                // Fallback to static image
+                generatedLogos.push({
+                    id: style.id,
+                    name: style.name,
+                    image: `/static/blackie_${style.id}.jpg`,
+                    generated: false,
+                    error: String(styleError)
+                })
+            }
+        }
+        
+        return c.json({
+            success: true,
+            petName,
+            petType,
+            logos: generatedLogos
+        })
+        
+    } catch (error) {
+        console.error('Logo generation error:', error)
+        return c.json({ 
+            error: 'Failed to generate logos', 
+            details: String(error) 
+        }, 500)
+    }
+})
 
 // 6 Logo Styles - Premium Memorial Pet Art (LOVING EYES - honoring their memory)
 const logoStyles = [
@@ -338,6 +508,7 @@ app.get('/crear', (c) => {
                 petType: 'rabbit',
                 generating: false,
                 generationProgress: 0,
+                generationStatus: '',
                 
                 // Logo selection
                 generatedLogos: [],
@@ -366,7 +537,7 @@ app.get('/crear', (c) => {
                     }
                 },
                 
-                startGeneration() {
+                async startGeneration() {
                     if (!this.petName.trim()) {
                         alert('Por favor ingresa el nombre');
                         return;
@@ -379,21 +550,76 @@ app.get('/crear', (c) => {
                     this.generating = true;
                     this.generationProgress = 0;
                     this.step = 2;
+                    this.generationStatus = 'Conectando con IA...';
                     
-                    const interval = setInterval(() => {
-                        this.generationProgress += Math.random() * 12;
-                        if (this.generationProgress >= 100) {
-                            this.generationProgress = 100;
-                            clearInterval(interval);
-                            
-                            this.generatedLogos = this.styles.map(s => ({...s, generated: true}));
-                            
-                            setTimeout(() => {
-                                this.generating = false;
-                                this.step = 3;
-                            }, 500);
+                    // Progress animation while waiting
+                    const progressInterval = setInterval(() => {
+                        if (this.generationProgress < 85) {
+                            this.generationProgress += Math.random() * 5;
                         }
-                    }, 350);
+                    }, 500);
+                    
+                    try {
+                        // Call the real API
+                        const response = await fetch('/api/generate-logos', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                imageBase64: this.imageSrc,
+                                petName: this.petName,
+                                petType: this.petType
+                            })
+                        });
+                        
+                        clearInterval(progressInterval);
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            if (data.success && data.logos) {
+                                // Map API response to our format with additional info
+                                const styleInfo = {
+                                    watercolor: { subtitle: 'Artistic Premium', desc: 'Acuarela elegante con ojos soñadores', icon: 'fa-droplet', color: '#4ECDC4', rating: 10 },
+                                    kawaii: { subtitle: 'Cute & Loving', desc: 'Ojos brillantes con corazones', icon: 'fa-heart', color: '#FF6B9D', rating: 9 },
+                                    bold: { subtitle: 'Designer Style', desc: 'Líneas bold, mirada amorosa', icon: 'fa-shapes', color: '#1A1A1A', rating: 9 },
+                                    stencil: { subtitle: 'Peaceful', desc: 'Silueta serena, ojos cerrados', icon: 'fa-moon', color: '#4A7C59', rating: 8 },
+                                    monoline: { subtitle: 'Elegant Minimal', desc: 'Línea continua, expresión pacífica', icon: 'fa-pen-nib', color: '#6B4A7C', rating: 8 },
+                                    signature: { subtitle: 'Estilo Oficial', desc: 'El logo clásico premium', icon: 'fa-star', color: '#E3B505', rating: 10 }
+                                };
+                                
+                                this.generatedLogos = data.logos.map(logo => ({
+                                    ...logo,
+                                    ...styleInfo[logo.id],
+                                    generated: logo.generated !== false
+                                }));
+                                
+                                this.generationProgress = 100;
+                                this.generationStatus = '¡Logos creados!';
+                                
+                                setTimeout(() => {
+                                    this.generating = false;
+                                    this.step = 3;
+                                }, 800);
+                            } else {
+                                throw new Error(data.error || 'Error en la respuesta');
+                            }
+                        } else {
+                            throw new Error('Error del servidor');
+                        }
+                    } catch (error) {
+                        clearInterval(progressInterval);
+                        console.error('Generation error:', error);
+                        
+                        // Fallback to demo mode
+                        this.generationStatus = 'Usando modo demo...';
+                        this.generatedLogos = this.styles.map(s => ({...s, generated: true}));
+                        this.generationProgress = 100;
+                        
+                        setTimeout(() => {
+                            this.generating = false;
+                            this.step = 3;
+                        }, 500);
+                    }
                 },
                 
                 selectLogo(logoId) {
@@ -592,10 +818,11 @@ app.get('/crear', (c) => {
                         </div>
                     </div>
                     
-                    <h2 class="text-2xl font-bold mb-2">Creando Arte...</h2>
-                    <p class="text-gray-500 mb-6 text-sm">
-                        Generando logos para <span class="font-bold text-[#1A1A1A]" x-text="petName"></span>
+                    <h2 class="text-2xl font-bold mb-2">Creando Arte con IA...</h2>
+                    <p class="text-gray-500 mb-2 text-sm">
+                        Generando 6 logos únicos para <span class="font-bold text-[#1A1A1A]" x-text="petName"></span>
                     </p>
+                    <p class="text-[#4A7C59] font-bold text-xs mb-4" x-text="generationStatus"></p>
                     
                     <div class="bg-gray-200 rounded-full h-3 overflow-hidden max-w-xs mx-auto mb-4">
                         <div class="bg-[#1A1A1A] h-full rounded-full transition-all duration-300"
