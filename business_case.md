@@ -7,18 +7,14 @@ Creación de una plataforma web (SaaS) que permite a los dueños de mascotas tra
 
 ## 2. Identidad de Marca
 
+### Naming Definitivo: **Blackie**
+Decisión final: El nombre de la marca será **Blackie**.
+*   **Por qué:** Es el nombre original de la fuente de inspiración. Es corto, personal, auténtico y directo. Representa el alma del proyecto sin filtros.
+*   **Slogan:** "Arte que deja huella".
+
 ### Historia de Origen (El Corazón de la Marca)
 Todo nace de **Blackie**, un conejo amado que dejó una huella imborrable. Esta aplicación no es solo un negocio, es un homenaje a él y una herramienta para ayudar a otros a sanar.
-*   **Símbolo:** El isotipo principal (Logo) será la silueta estilizada de un **conejo** (en honor a Blackie), minimalista y elegante.
-
-### Propuestas de Naming (Apps Cortas y Memorables)
-Buscamos un nombre de 3-4 sílabas máximo, corto y sonoro.
-
-1.  **Kora:** (Del corazón). Corto, fuerte.
-2.  **Luni:** (De "Lunes" o "Luna", evocando la noche/negro de Blackie de forma sutil y tierna).
-3.  **Buni:** (Corto de Bunny, pero escrito moderno).
-4.  **Nero:** (Negro en italiano - Homenaje directo al nombre "Blackie" pero sonando a app de diseño premium).
-5.  **Alma:** (La esencia que queda).
+*   **Símbolo:** El isotipo principal (Logo) será la silueta estilizada de un **conejo**, minimalista y elegante.
 
 ### Psicología del Color (Paleta Sugerida)
 Como psicólogo, sabes que necesitamos evocar **calma, sanación y amor**, no urgencia comercial agresiva.

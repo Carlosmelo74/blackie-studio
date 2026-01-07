@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'kora-app',
+      name: 'blackie',
       script: 'npm',
       args: 'run dev:sandbox',
       env: {

@@ -1,21 +1,29 @@
-```txt
-npm install
-npm run dev
-```
+# Blackie Studio
 
-```txt
-npm run deploy
-```
+## Project Overview
+- **Name**: Blackie Studio (blackie-app)
+- **Goal**: Emotional Print-on-Demand (POD) platform for pet lovers. Transforms pet photos into artistic logos/designs using AI styles.
+- **Inspiration**: Honoring "Blackie", a beloved rabbit.
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+## URLs
+- **Production**: https://blackie-app.pages.dev
+- **Design Studio**: https://blackie-app.pages.dev/crear
 
-```txt
-npm run cf-typegen
-```
+## Features
+- **AI Art Styles**: 5 unique artistic filters (Classic, Storyteller, Handwritten, Heritage, Gorgeous).
+- **Live Mockups**: Real-time preview of designs on Tote Bags, Mugs, Tees, and Framed Art.
+- **Real Photo Integration**: Uses the actual user-uploaded photo with advanced CSS blending for realistic print simulation.
+- **Emotional UX**: Warm, high-contrast editorial design with storytelling elements.
 
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
+## Deployment
+- **Platform**: Cloudflare Pages
+- **Framework**: Hono (SSR) + Alpine.js (Interactivity) + TailwindCSS (Styling)
+- **Status**: ✅ Active
+- **Last Updated**: 2026-01-04
 
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+## How to Use
+1. Go to the **Design Studio** (/crear).
+2. The default photo is set to Blackie.
+3. Choose a style from the left panel.
+4. Watch the products update instantly.
+5. Click "Checkout" on any product to simulate the purchase flow.
